@@ -1,11 +1,20 @@
-repositories:
-- name: prometheus-community
-  url: https://prometheus-community.github.io/helm-charts
+# This allows you to pass "production" or "staging" from the Argo CD UI
+environments:
+  default:
+  production:
+  staging:
 
 releases:
-- name: prom-norbac-ubuntu
-  namespace: prometheus
-  chart: prometheus-community/prometheus
-  set:
-  - name: rbac.create
-    value: false
+  - name: frontend-stack
+    chart: oci://registry-1.docker.io/bitnamicharts/nginx
+    version: 15.4.2
+    # The plugin passes the Argo CD Target Namespace automatically
+    namespace: {{ .Namespace }}
+    # Loads values based on the environment set in Argo CD
+    values:
+      - ./values/common.yaml
+      - ./values/{{ .Environment.Name }}.yaml
+    # Example of using an Env Var directly from the UI
+    set:
+      - name: replicaCount
+        value: {{ fetchSecretValue "ARGOCD_ENV_REPLICAS" | default 2 }}

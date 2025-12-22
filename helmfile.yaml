@@ -3,7 +3,7 @@ environments:
   default:
   production:
   staging:
-
+---
 releases:
   - name: frontend-stack
     chart: oci://registry-1.docker.io/bitnamicharts/nginx

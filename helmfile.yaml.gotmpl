@@ -9,12 +9,12 @@ releases:
     chart: oci://registry-1.docker.io/bitnamicharts/nginx
     version: 15.4.2
     # The plugin passes the Argo CD Target Namespace automatically
-    namespace: {{ .Namespace }}
+    namespace: "{{ .Namespace }}"
     # Loads values based on the environment set in Argo CD
     values:
       - ./values/common.yaml
-      - ./values/{{ .Environment.Name }}.yaml
+      - "./values/{{ .Environment.Name }}.yaml"
     # Example of using an Env Var directly from the UI
     set:
       - name: replicaCount
-        value: {{ fetchSecretValue "ARGOCD_ENV_REPLICAS" | default 2 }}
+        value: {{ $replicas := fetchSecretValue "ARGOCD_ENV_REPLICAS" }}{{ if and $replicas (ne $replicas "") }}{{ $replicas | int }}{{ else }}2{{ end }}

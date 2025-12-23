@@ -1,20 +1,7 @@
-# This allows you to pass "production" or "staging" from the Argo CD UI
-environments:
-  default:
-  production:
-  staging:
----
+
 releases:
   - name: frontend-stack
     chart: oci://registry-1.docker.io/bitnamicharts/nginx
     version: 15.4.2
     # The plugin passes the Argo CD Target Namespace automatically
     namespace: "{{ .Namespace }}"
-    # Loads values based on the environment set in Argo CD
-    values:
-      - ./values/common.yaml
-      - "./values/{{ .Environment.Name }}.yaml"
-    # Example of using an Env Var directly from the UI
-    set:
-      - name: replicaCount
-        value: {{ $replicas := fetchSecretValue "ARGOCD_ENV_REPLICAS" }}{{ if and $replicas (ne $replicas "") }}{{ $replicas | int }}{{ else }}2{{ end }}

@@ -2,6 +2,6 @@
 releases:
   - name: frontend-stack
     chart: oci://registry-1.docker.io/bitnamicharts/nginx
-    version: 15.4.2
+    version: 22.4.2
     # The plugin passes the Argo CD Target Namespace automatically
     namespace: "{{ .Namespace }}"
